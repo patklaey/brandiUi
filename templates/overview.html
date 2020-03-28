@@ -8,7 +8,7 @@
             <div ng-init="initGames()">
                 <ul>
                     <li ng-repeat="game in games">
-                        {{game.id}} with status {{game.game_state}} <button type="button" class="btn btn-primary btn-xs" ng-show="isAuthenticated()" ng-cloak ng-click="joinGame(game.id)">Join game</button>
+                        {{game.game_name}} with status {{game.game_state}} <button type="button" class="btn btn-primary btn-xs" ng-show="isAuthenticated()" ng-cloak ng-click="joinGame(game.id)">Join game</button>
                     </li>
                     <li ng-show="weDoNotHaveGames()">No open games found <button type="button" class="btn btn-primary btn-xs" ng-cloak ng-click="createGame()">Create one</button></li>
                 </ul>

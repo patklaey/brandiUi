@@ -132,7 +132,16 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
                 });
             }
         );
-    }
+        $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId)
+            .then(function(response) {
+                $scope.gameName = response.data.game_name;
+            }, function() {
+                $translate('cannotLoadEvents').then(function (text) {
+                    $scope.showErrorToast(text);
+                });
+            }
+        );
+}
 
     $scope.getLastCardPlayed = function() {
         if( ! $scope.currentRound )
