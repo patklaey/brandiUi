@@ -1,0 +1,72 @@
+<div class="modal-header">
+    <h4>{{ 'register' | translate}}</h4>
+</div>
+
+<form name="registerForm" ng-submit="register()" novalidate>
+
+    <div class="modal-body">
+        <div ng-class="{ 'has-error': registerForm.username.$invalid && registerForm.username.$touched }">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="username" type="text" autofocus class="form-control" name="username" placeholder="{{ 'username' | translate}}" ng-unique="{property:'username'}" ng-model="user.username" minlength="3" maxlength="15" required>
+            </div>
+            <div class="help-block" ng-messages="registerForm.username.$error" ng-if="registerForm.username.$touched">
+                <p ng-message="required">{{ 'usernameRequired' | translate}}</p>
+                <p ng-message="unique">{{ 'usernameTaken' | translate}}</p>
+                <p ng-message="minlength">{{ 'usernameMinLength' | translate}}</p>
+                <p ng-message="maxlength">{{ 'usernameMaxLength' | translate}}</p>
+            </div>
+
+        </div>
+        <div ng-class="{ 'has-error': registerForm.email.$invalid && registerForm.email.$touched }">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                <input id="email" type="email" class="form-control" name="email" ng-unique="{property:'email'}" placeholder="{{ 'email' | translate}}" ng-model="user.email" required>
+            </div>
+            <div class="help-block" ng-messages="registerForm.email.$error" ng-if="registerForm.email.$touched">
+                <p ng-message="required">{{ 'emailRequired' | translate}}</p>
+                <p ng-message="unique">{{ 'emailTaken' | translate}}</p>
+                <p ng-message="email">{{ 'emailInvalid' | translate}}</p>
+            </div>
+        </div>
+
+        <div ng-class="{ 'has-error': registerForm.password.$invalid && registerForm.password.$touched }">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="password" type="password" class="form-control" name="password" placeholder="{{ 'password' | translate}}" ng-model="user.password" minlength="8" required>
+            </div>
+            <div class="help-block" ng-messages="registerForm.password.$error" ng-if="registerForm.password.$touched">
+                <p ng-message="required">{{ 'passwordRequired' | translate}}</p>
+                <p ng-message="minlength">{{ 'passwordMinLength' | translate}}</p>
+            </div>
+        </div>
+        <div ng-class="{ 'has-error': registerForm.confirmPassword.$invalid && registerForm.confirmPassword.$touched }">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="confirmPassword" type="password" class="form-control" name="confirmPassword" placeholder="{{ 'confirmPassword' | translate}}" ng-model="user.confirmPassword" compare-to="user.password" required>
+            </div>
+            <div class="help-block" ng-messages="registerForm.confirmPassword.$error" ng-if="registerForm.confirmPassword.$touched">
+                <p ng-message="required">{{ 'passwordConfirmationRequired' | translate}}</p>
+                <p ng-message="compareTo">{{ 'passwordMismatch' | translate}}</p>
+            </div>
+        </div>
+        <div>
+            <div class="input-group form-group">
+                <span class="input-group-addon"><img src="../../resources/de_en.jpg" width="20px" height="20px"></span>
+                <select name="language" id="language" ng-model="user.language" class="form-control" ng-init="user.language = 'de'">
+                    <option value="de">Deutsch</option>
+                    <option value="en">English</option>
+                    <option value="de-be">Bärndütsch</option>
+                </select>
+            </div>
+        </div>
+        <div style="text-align:center">
+            <spinner name="registerSpinner" img-src="./resources/default.gif">{{ 'registerSpinnerText' | translate}}</spinner>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="cancelRegister()">{{ 'cancel' | translate}}</button>
+        <button type="submit" class="btn btn-primary">{{ 'register' | translate}}</button>
+    </div>
+</form>

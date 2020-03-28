@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Brändi Dog online</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+
+    <!--jquery version 3.1.1-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!--angular version 1.5.5-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-sanitize.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-cookies.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
+
+    <!--angular-material version 1.1.0-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+
+    <!--bootstrap version 3.3.7-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!--other dependencies-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="./libs/moment/min/moment-with-locales.min.js"></script>
+
+    <!--Responsive calendar-->
+    <link rel="stylesheet" href="./css/calendar.css"/>
+    <script src="./js/config.js"></script>
+    <!--<script src="./js/calendar.js"></script>-->
+    <script src="./js/app.js"></script>
+
+    <!--ngToast-->
+    <link rel="stylesheet" href="./libs/ngToast/dist/ngToast.min.css">
+    <script src="./libs/ngToast/dist/ngToast.min.js"></script>
+
+    <!--ui bootstrap-->
+    <script src="./libs/angular-ui/ui-bootstrap-tpls-2.4.0.js"></script>
+
+    <!--datetimepicker-->
+    <script src="./libs/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <link rel="stylesheet" href="./libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" />
+
+    <!-- spinner-->
+    <script src="./libs/angular-spinners-3.1.2/dist/angular-spinners.min.js"></script>
+
+    <!-- translate -->
+    <script src="./libs/angular-translate/angular-translate.min.js"></script>
+    <script src="./libs/angular-translate/angular-translate-loader-static-files.min.js"></script>
+
+</head>
+<body>
+    <div class="App" ng-app="App">
+        <nav class="navbar navbar-default">
+            <div class="container container-fluid" ng-controller="headerController" ng-init="initUser()">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">{{ 'title' | translate }}</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="" role="button" ng-cloak ng-show="showAddGameButton()" ng-click="createGame()">{{ 'addGame' | translate }}</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#users" role="button" ng-cloak ng-show="showUsersButton()">{{ 'users' | translate }}</a></li>
+                    <li><a href="#" role="button" ng-cloak ng-show="showCalendarButton()">{{ 'calendar' | translate }}</a></li>
+                    <li><a href="" role="button" ng-cloak ng-show="!isAuthenticated()" ng-click="showLogin()">{{ 'login' | translate }}</a></li>
+                    <li><a href="" role="button" ng-cloak ng-show="!isAuthenticated()" ng-click="showRegister()">{{ 'register' | translate }}</a></li>
+                    <li class="dropdown" ng-cloak ng-show="!isAuthenticated()">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="./resources/de_en.jpg" width="20px" height="20px"><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a role="button" href="" ng-click='useLanguage("en")'>English</a></li>
+                            <li><a role="button" href="" ng-click='useLanguage("de")'>Deutsch</a></li>
+                            <li><a role="button" href="" ng-click='useLanguage("de-be")'>Bärndütsch</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" ng-cloak ng-show="isAuthenticated()">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{currentUser.username}}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a role="button" href="" ng-click="showMyAccount()">{{ 'myAccount' | translate }}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a role="button" href="" ng-click="logout()">{{ 'logout' | translate }}</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <toast></toast>
+        <div ng-view></div>
+    </div>
+</body>
+</html>

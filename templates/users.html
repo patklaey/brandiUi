@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1">{{ 'id' | translate}}</div>
+            <div class="col-md-2">{{ 'username' | translate}}</div>
+            <div class="col-md-3">{{ 'email' | translate}}</div>
+            <div class="col-md-2">{{ 'password' | translate}}</div>
+            <div class="col-md-1">{{ 'active' | translate}}</div>
+            <div class="col-md-1">{{ 'admin' | translate}}</div>
+            <hr/>
+        </div>
+        <div ng-controller="userController" ng-repeat="user in allUsers">
+            <div class="row">
+                <form name="editUserForm" ng-submit="updateUser()" novalidate>
+                    <div class="col-md-1">
+                        <div class="input-group form-group">
+                            <input type="text" class="form-control" disabled="true" value="{{user.id}}" name="id" ng-model="user.id">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                            <input id="username" type="text" class="form-control" name="username" ng-unique="{property:'username'}" value="{{user.username}}" ng-model="user.username" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                            <input id="email" type="email" class="form-control" name="email" ng-unique="{property:'email'}" value="{{user.email}}" ng-model="user.email" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="password" type="password" class="form-control" name="password" placeholder="New Password" ng-model="user.password" minlength="8" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class='input-group date form-group'>
+                            <input id="active" name="active" type="checkbox" checked="{{user.active}}" ng-model="user.active"/>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class='input-group date form-group'>
+                            <input id="admin" name="admin" type="checkbox" checked="{{user.admin}}" ng-model="user.admin"/>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class='input-group date form-group'>
+                            <button type="submit" class="btn btn-primary">{{ 'save' | translate}}</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class='input-group date form-group'>
+                            <button type="button" class="btn btn-danger" ng-click="deleteUser()">{{ 'delete' | translate}}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr/>
+        </div>
+    </div>
+</body>
+</html>

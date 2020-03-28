@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h4>Build Teams</h4>
+</div>
+
+<form name="gameForm" ng-submit="buildTeams()" novalidate>
+    The following players are available: {{ players }}
+    <div class="modal-body container col-md-12">
+        Team A
+        <div class="row">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="teamA-player1" type="text" autofocus class="form-control" name="teamA-player1" placeholder="Team A Player 1" ng-model="teams.teamA.player1" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="teamA-player2" type="text" autofocus class="form-control" name="teamA-player2" placeholder="Team A Player 2" ng-model="teams.teamA.player2" required>
+            </div>
+        </div>
+        <hr>
+        Team B
+        <div class="row">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="teamB-player1" type="text" autofocus class="form-control" name="teamB-player1" placeholder="Team B Player 1" ng-model="teams.teamB.player1" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="teamB-player2" type="text" autofocus class="form-control" name="teamB-player2" placeholder="Team B Player 2" ng-model="teams.teamB.player2" required>
+            </div>
+        </div>
+        <hr>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="cancelBuildTeams()">{{ 'cancel' | translate}}</button>
+        <button type="submit" class="btn btn-primary">{{ 'add' | translate}}</button>
+    </div>
+</form>

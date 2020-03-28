@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h4>{{ 'addGame' | translate}}</h4>
+</div>
+
+<form name="gameForm" ng-submit="addGame()" novalidate>
+    <div class="modal-body container col-md-12">
+        <div class="row">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="username" type="text" autofocus class="form-control" name="username" placeholder="{{ 'username' | translate}}" ng-model="game.name" minlength="3" maxlength="15" required>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="cancelCreateGame()">{{ 'cancel' | translate}}</button>
+        <button type="submit" class="btn btn-primary">{{ 'add' | translate}}</button>
+    </div>
+</form>

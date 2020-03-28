@@ -1,0 +1,83 @@
+<div class="modal-header">
+    <h4>{{ 'myAccount' | translate}}</h4>
+</div>
+
+<form name="myUserForm" ng-submit="updateMyUser()" novalidate>
+
+    <div class="modal-body">
+        <div>
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="username" type="text" class="form-control" name="username" ng-model="myUser.username" readonly>
+            </div>
+        </div>
+        <div>
+            <hr/>
+            <p>{{ 'nextReservation' | translate }}:</p>
+        </div>
+        <div>
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <input id="nextReservation" type="text" class="form-control" name="nextReservation" ng-model="nextReservation" readonly>
+            </div>
+        </div>
+        <div>
+            <hr/>
+            <p>{{ 'changePassword' | translate }}:</p>
+        </div>
+        <div ng-class="{ 'has-error': myUserForm.oldPassword.$invalid && myUserForm.oldPassword.$touched}">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="oldPassword" type="password" class="form-control" name="oldPassword" placeholder="{{ 'oldPassword' | translate}}" ng-model="myUser.oldPassword" required>
+            </div>
+            <div class="help-block" ng-messages="myUserForm.oldPassword.$error" ng-if="myUserForm.oldPassword.$touched">
+                <p ng-message="required">{{ 'oldPasswordRequired' | translate}}.</p>
+            </div>
+        </div>
+        <div ng-class="{ 'has-error': myUserForm.password.$invalid && myUserForm.password.$touched }">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="password" type="password" class="form-control" name="password" placeholder="{{ 'password' | translate}}" ng-model="myUser.password" minlength="8" required>
+            </div>
+            <div class="help-block" ng-messages="myUserForm.password.$error" ng-if="myUserForm.password.$touched">
+                <p ng-message="required">{{ 'passwordRequired' | translate}}</p>
+                <p ng-message="minlength">{{ 'passwordMinLength' | translate}}</p>
+            </div>
+        </div>
+        <div ng-class="{ 'has-error': myUserForm.confirmPassword.$invalid && myUserForm.confirmPassword.$touched }">
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="confirmPassword" type="password" class="form-control" name="confirmPassword" placeholder="{{ 'confirmPassword' | translate}}" ng-model="myUser.confirmPassword" compare-to="myUser.password" required>
+            </div>
+            <div class="help-block" ng-messages="myUserForm.confirmPassword.$error" ng-if="myUserForm.confirmPassword.$touched">
+                <p ng-message="required">{{ 'passwordConfirmationRequired' | translate}}</p>
+                <p ng-message="compareTo">{{ 'passwordMismatch' | translate}}</p>
+            </div>
+        </div>
+        <div class="alert alert-danger" ng-show="passwordWrong">
+            <strong>{{ 'loginFailed' | translate}}:</strong> {{ 'wrongUsernamePassword' | translate}}
+        </div>
+        <div>
+            <hr/>
+            <p>{{ 'changeLanguage' | translate }}:</p>
+        </div>
+        <div>
+            <div class="input-group form-group">
+                <span class="input-group-addon"><img src="../../resources/de_en.jpg" width="20px" height="20px"></span>
+                <select name="language" id="language" ng-model="myUser.language" class="form-control">
+                    <option value="de">Deutsch</option>
+                    <option value="en">English</option>
+                    <option value="de-be">Bärndütsch</option>
+                </select>
+            </div>
+        </div>
+        <div style="text-align:center">
+            <spinner name="updateMyUserSpinner" img-src="./resources/default.gif">{{ 'updateUserSpinnerText' | translate}} </spinner>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="cancelUpdateMyAccount()">{{ 'cancel' | translate}}</button>
+        <button type="submit" class="btn btn-primary">{{ 'save' | translate}}</button>
+    </div>
+</form>
