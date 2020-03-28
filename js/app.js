@@ -360,9 +360,9 @@ myAppModule.controller('overviewController', function ($scope, $interval, $rootS
     });
 
     $scope.addGame = function() {
-        alert($scope.game.name)
+	var game = {"name":$scope.game.name}
 //        $http.post(CONFIG.API_ENDPOINT + '/games',JSON.stringify(event), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
-        $http.post(CONFIG.API_ENDPOINT + '/games',null, {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
+        $http.post(CONFIG.API_ENDPOINT + '/games', JSON.stringify(game), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
             .success(function(response) {
                 var gameId = response.id;
                 $translate('eventAdded').then(function (text) {
@@ -370,6 +370,7 @@ myAppModule.controller('overviewController', function ($scope, $interval, $rootS
                 });
                 $rootScope.createGameModal.close("Event added");
                 $rootScope.$broadcast('game-source-changed');
+		$rootScope.createGameModal.close("done");
                 $location.path("/games/" + gameId)
             })
             .catch(function(response) {
