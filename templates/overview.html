@@ -5,7 +5,7 @@
 <html lang="en">
     <body>
         <div class="container">
-            <div ng-controller="GameCtrl" ng-init="initGames()">
+            <div ng-init="initGames()">
                 <ul>
                     <li ng-repeat="game in games">
                         {{game.id}} with status {{game.game_state}} <button type="button" class="btn btn-primary btn-xs" ng-show="isAuthenticated()" ng-cloak ng-click="joinGame(game.id)">Join game</button>

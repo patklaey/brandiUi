@@ -13,6 +13,10 @@ myAppModule.config(['$httpProvider', '$routeProvider', '$translateProvider', fun
                 templateUrl: "templates/game.html",
                 controller: 'GameCtrl'
             })
+            .when("/games/:gameId/currentRound", {
+                templateUrl: "templates/round.html",
+                controller: 'roundController'
+            })
             .otherwise({
                 templateUrl: "templates/overview.html",
                 controller: 'overviewController'
@@ -81,6 +85,110 @@ myAppModule.run(function($translate, $cookies, COOKIE_KEYS) {
 });
 
 
+myAppModule.controller('roundController', function ($scope, $interval, $rootScope, $uibModal, $http, $sce, ngToast, $location, $routeParams, $timeout, $cookies, CONFIG, COOKIE_KEYS, spinnerService, $translate) {
+
+    $scope.gameId = $routeParams.gameId;
+
+    $scope.showInfoToast = function(message) {
+        ngToast.create(message);
+    };
+
+    $scope.showErrorToast = function(message){
+        ngToast.danger({
+            content: $sce.trustAsHtml('<div class="error-toast">' + message + '</div>'),
+            timeout: 10000,
+            dismissOnClick: false,
+            dismissButton: true
+        });
+    };
+
+    $scope.playCard = function(card) {
+        var body = {"card":card.key}
+        $http.post(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + '/currentRound/playcard', JSON.stringify(body), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
+           .success(function(response) {
+               $scope.showInfoToast("Card '" + card.value + "' played !");
+               $scope.refreshData();
+           })
+           .catch(function(response) {
+               $scope.showErrorToast(response.data);
+           })
+           .finally(function () {
+           });
+    };
+
+    $scope.refreshCards = function () {
+        $scope.loadCards();
+    };
+
+    $scope.initRound = function () {
+        $scope.loadRound();
+        $scope.loadCards();
+        $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + "/teams")
+            .then(function(response) {
+                $scope.teams = response.data;
+            }, function() {
+                $translate('cannotLoadEvents').then(function (text) {
+                    $scope.showErrorToast(text);
+                });
+            }
+        );
+    }
+
+    $scope.getLastCardPlayed = function() {
+        if( ! $scope.currentRound )
+            return "None"
+        return $scope.currentRound.last_card_played || "None"
+    }
+
+    $scope.refreshData = function () {
+        $scope.loadRound();
+        $scope.loadCards();
+    };
+
+    $scope.loadRound = function() {
+        $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + "/currentRound")
+            .then(function(response) {
+                $scope.currentRound = response.data;
+            }, function() {
+                $translate('cannotLoadEvents').then(function (text) {
+                    $scope.showErrorToast(text);
+                    $scope.stopPolling();
+                });
+            }
+        );
+    };
+
+    $scope.loadCards = function() {
+        $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + "/currentRound/set")
+            .then(function(response) {
+                $scope.currentSet = response.data;
+            }, function() {
+                $translate('cannotLoadEvents').then(function (text) {
+                    $scope.showErrorToast(text);
+                    $scope.stopPolling();
+                });
+            }
+        );
+    };
+
+    $scope.refreshDataInterval = $interval($scope.refreshData, 2000);
+
+    $scope.stopPolling = function() {
+        $interval.cancel($scope.refreshDataInterval);
+    };
+
+    $scope.$on('$destroy', function() {
+      // Make sure that the interval is destroyed too
+      $scope.stopPolling();
+    });
+
+    $scope.isAuthenticated = function() {
+        return $cookies.get(COOKIE_KEYS.AUTHENTICATED);
+    };
+
+});
+
+
 myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uibModal, $http, $sce, ngToast, $location, $routeParams, $timeout, $cookies, CONFIG, COOKIE_KEYS, spinnerService, $translate) {
 
     $scope.gameId = $routeParams.gameId;
@@ -102,6 +210,8 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
         $http.get(CONFIG.API_ENDPOINT + '/games/' + gameId)
             .then(function(response) {
                 $scope.currentGame = response.data;
+                if( $scope.currentGame.game_state == "in_progress")
+                    $location.path("/games/" + gameId + "/currentRound")
             }, function() {
                 $translate('cannotLoadEvents').then(function (text) {
                     $scope.stopPolling();
@@ -171,7 +281,7 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
         $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + "/start")
             .then(function(response) {
 
-                alert("Game started")
+                $location.path("/games/" + gameId + "/currentRound")
 
             }, function() {
                 $translate('cannotLoadEvents').then(function (text) {

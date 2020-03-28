@@ -5,6 +5,15 @@ body {
     overflow-x: hidden;
 }
 
+table {
+    text-align: center;
+}
+
+td {
+    margin: 10px;
+    padding: 10px;
+}
+
 .dropdown:hover .dropdown-menu {
     display: block;
     margin-top: 0;
