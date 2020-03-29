@@ -3,22 +3,34 @@
     <link rel="stylesheet" href="./css/calendar.css"/>
 </head>
 <html lang="en">
-<body>
-<div class="container">
-    <div ng-init="initRound()">
-        Game {{gameName}} playing {{teams.A.player1}} and {{teams.A.player2}} vs {{teams.B.player1}} and {{teams.B.player2}}<br/>
-        Player to play next: {{currentRound.player_to_play}}
-        <h3>Table:</h3>
-        <table border="1">
-            <tr>
-                <td colspan="{{currentSet.cards_left}}">{{getLastCardPlayed()}}</td>
-            </tr>
-            <tr>
-                <td ng-repeat="card in currentSet.cards">
-                    <button type="button" class="btn btn-primary btn-xs" ng-cloak ng-click="playCard(card)">{{card.value}}</button>
-                </td>
-            </tr>
-        </table>
+<body ng-cloak>
+<div ng-cloak class="container">
+    <div ng-cloak ng-init="initRound()">
+        <div ng-cloak ng-show="isRoundInProgress()">
+            Game {{gameName}} playing {{teams.A.player1}} and {{teams.A.player2}} vs {{teams.B.player1}} and {{teams.B.player2}}<br/>
+            Player to play next: {{currentRound.player_to_play}}
+            <h3>Table:</h3>
+            <table ng-cloak border="1">
+                <tr ng-cloak>
+                    <td ng-cloak colspan="{{currentSet.cards_left}}">{{getLastCardPlayed()}}</td>
+                </tr>
+                <tr ng-cloak>
+                    <td ng-cloak ng-repeat="card in currentSet.cards">
+                        <button type="button" class="btn btn-primary btn-xs" ng-cloak ng-click="playCard(card)">{{card.value}}</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div ng-cloak ng-show="isChangeCardTime()">
+            Select the card you want to exchange with your team member
+            <table ng-cloak border="1">
+                <tr ng-cloak>
+                    <td ng-cloak ng-repeat="card in currentSet.cards">
+                        <button type="button" class="btn btn-primary btn-xs" ng-cloak ng-click="changeCard(card)">{{card.value}}</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 </body>

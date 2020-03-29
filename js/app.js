@@ -102,6 +102,36 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
         });
     };
 
+    $scope.$on('$viewContentLoaded', function(){
+       $scope.loaded = true;
+    });
+
+    $scope.isChangeCardTime = function() {
+        if( ! $scope.currentRound )
+            return false;
+        return $scope.currentRound.round_state == "change_cards" && $scope.loaded;
+    };
+
+    $scope.isRoundInProgress = function() {
+        if( ! $scope.currentRound )
+            return false;
+        return $scope.currentRound.round_state == "in_progress" && $scope.loaded;
+    };
+
+    $scope.changeCard = function(card) {
+        var body = {"card":card.key}
+            $http.post(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + '/currentRound/changecard', JSON.stringify(body), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
+               .success(function(response) {
+                   $scope.showInfoToast("Card '" + card.value + "' exchanged, waiting for your team member to also exchange card !");
+                   $scope.refreshData();
+               })
+               .catch(function(response) {
+                   $scope.showErrorToast(response.data);
+               })
+               .finally(function () {
+               });
+    };
+
     $scope.playCard = function(card) {
         var body = {"card":card.key}
         $http.post(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + '/currentRound/playcard', JSON.stringify(body), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
