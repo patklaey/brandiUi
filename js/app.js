@@ -80,6 +80,19 @@ myAppModule.directive("compareTo", function() {
 });
 
 
+myAppModule.directive('playername', function($rootScope) {
+    return {
+       require: "ngModel",
+
+       link: function(scope, element, attributes, ngModel) {
+            ngModel.$validators.playername = function(modelValue) {
+                return Object.keys($rootScope.userNameToId).indexOf(modelValue) >= 0;
+            };
+       }
+   };
+});
+
+
 myAppModule.run(function($translate, $cookies, COOKIE_KEYS) {
     $translate.use($cookies.getObject(COOKIE_KEYS.LANGUAGE));
 });
@@ -153,6 +166,11 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
     $scope.initRound = function () {
         $scope.loadRound();
         $scope.loadCards();
+        if( ! $rootScope.currentUsers ) {
+            $scope.initUsers();
+        } else {
+            $scope.currentUsers = $rootScope.currentUsers;
+        }
         $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + "/teams")
             .then(function(response) {
                 $scope.teams = response.data;
@@ -171,13 +189,32 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
                 });
             }
         );
-}
+    };
+
+    $scope.initUsers = function() {
+        $http.get(CONFIG.API_ENDPOINT + '/users' )
+            .then(function(response) {
+                var userIdToUserName = {};
+                var userNameToId = {};
+                var users = response.data;
+                for (n in users){
+                    userIdToUserName[users[n].id] = users[n].username;
+                    userNameToId[users[n].username] = users[n].id;
+                }
+                $rootScope.userIdToUserName = userIdToUserName;
+                $rootScope.userNameToId = userNameToId;
+            }, function() {
+                $translate('cannotLoadEvents').then(function (text) {
+                });
+            }
+        );
+    };
 
     $scope.getLastCardPlayed = function() {
         if( ! $scope.currentRound )
             return "None"
         return $scope.currentRound.last_card_played || "None"
-    }
+    };
 
     $scope.refreshData = function () {
         $scope.loadRound();
@@ -245,15 +282,40 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
         });
     };
 
+    $scope.initGame = function() {
+        var gameId = $scope.gameId;
+        $scope.initUsers(gameId);
+        $scope.loadGame(gameId);
+    }
+
     $scope.loadGame = function(gameId) {
         $http.get(CONFIG.API_ENDPOINT + '/games/' + gameId)
             .then(function(response) {
                 $scope.currentGame = response.data;
                 if( $scope.currentGame.game_state == "in_progress")
-                    $location.path("/games/" + gameId + "/currentRound")
+                    $location.path("/games/" + gameId + "/currentRound");
             }, function() {
                 $translate('cannotLoadEvents').then(function (text) {
                     $scope.stopPolling();
+                });
+            }
+        );
+    };
+
+    $scope.initUsers = function() {
+        $http.get(CONFIG.API_ENDPOINT + '/users' )
+            .then(function(response) {
+                var userIdToUserName = {};
+                var userNameToId = {};
+                var users = response.data;
+                for (n in users){
+                    userIdToUserName[users[n].id] = users[n].username;
+                    userNameToId[users[n].username] = users[n].id;
+                }
+                $rootScope.userIdToUserName = userIdToUserName;
+                $rootScope.userNameToId = userNameToId;
+            }, function() {
+                $translate('cannotLoadEvents').then(function (text) {
                 });
             }
         );
@@ -269,7 +331,7 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
         if ( ! $scope.currentGame )
                 return false;
         return $scope.isAuthenticated() && $scope.currentGame.players_joined == 4 && $scope.currentGame.game_admin == $rootScope.currentUser.id;
-    }
+    };
 
     $scope.showBuildTeams = function() {
 
@@ -291,7 +353,28 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
     }
 
     $scope.buildTeams = function() {
-        $http.post(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + '/teams', JSON.stringify($scope.teams), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
+
+        angular.forEach($scope.buildTeamsForm.$error.required, function(field) {
+            field.$setTouched();
+        });
+
+        if ($scope.buildTeamsForm.$invalid){
+            $rootScope.$broadcast("invalid-form-event");
+            return;
+        }
+
+        var teams = {
+            "teamA": {
+                "player1": $rootScope.userNameToId[$scope.player1],
+                "player2": $rootScope.userNameToId[$scope.player2]
+            },
+            "teamB": {
+                "player1": $rootScope.userNameToId[$scope.player3],
+                "player2": $rootScope.userNameToId[$scope.player4]
+            }
+        };
+
+        $http.post(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + '/teams', JSON.stringify(teams), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
            .success(function(response) {
                $translate('eventAdded').then(function (text) {
                    $scope.showInfoToast(text + "!");
@@ -320,7 +403,7 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
         $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + "/start")
             .then(function(response) {
 
-                $location.path("/games/" + gameId + "/currentRound")
+                $location.path("/games/" + $scope.gameId + "/currentRound")
 
             }, function() {
                 $translate('cannotLoadEvents').then(function (text) {
@@ -335,7 +418,7 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
         $scope.loadGame($scope.gameId);
     };
 
-    $scope.refreshGameInterval = $interval($scope.refreshGame, 5000);
+    $scope.refreshGameInterval = $interval($scope.refreshGame, 10000);
 
     $scope.stopPolling = function() {
         $interval.cancel($scope.refreshGameInterval);
@@ -354,6 +437,21 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
         if($scope.buildTeamsModal){
             $scope.buildTeamsModal.dismiss("User canceled");
         }
+    };
+
+    $scope.$on('invalid-form-event', function(){
+        $translate('formErrors').then(function (text) {
+            $scope.showWarningToast(text + "!");
+        });
+    });
+
+    $scope.showWarningToast = function(message){
+        ngToast.warning({
+            content: $sce.trustAsHtml('<div class="warning-toast">' + message + '</div>'),
+            timeout: 5000,
+            dismissOnClick: false,
+            dismissButton: true
+        });
     };
 
 });

@@ -7,8 +7,10 @@
 <div ng-cloak class="container">
     <div ng-cloak ng-init="initRound()">
         <div ng-cloak ng-show="isRoundInProgress()">
-            Game {{gameName}} playing {{teams.A.player1}} and {{teams.A.player2}} vs {{teams.B.player1}} and {{teams.B.player2}}<br/>
-            Player to play next: {{currentRound.player_to_play}}
+            <div>
+                Game {{gameName}} playing {{userIdToUserName[teams.A.player1]}} and {{userIdToUserName[teams.A.player2]}} vs {{userIdToUserName[teams.B.player1]}} and {{userIdToUserName[teams.B.player2]}}<br/>
+                Player to play next: {{userIdToUserName[currentRound.player_to_play]}}
+            </div>
             <h3>Table:</h3>
             <table ng-cloak border="1">
                 <tr ng-cloak>
@@ -22,7 +24,10 @@
             </table>
         </div>
         <div ng-cloak ng-show="isChangeCardTime()">
-            Select the card you want to exchange with your team member
+            <div>
+                Select the card you want to exchange with your team member<br/>
+                By the way: New round will be started by {{userIdToUserName[currentRound.player_to_play]}}
+            </div>
             <table ng-cloak border="1">
                 <tr ng-cloak>
                     <td ng-cloak ng-repeat="card in currentSet.cards">
