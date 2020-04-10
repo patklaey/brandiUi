@@ -247,7 +247,7 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
         );
     };
 
-    $scope.refreshDataInterval = $interval($scope.refreshData, 2000);
+    $scope.refreshDataInterval = $interval($scope.refreshData, 3000);
 
     $scope.stopPolling = function() {
         $interval.cancel($scope.refreshDataInterval);
@@ -292,6 +292,7 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
         $http.get(CONFIG.API_ENDPOINT + '/games/' + gameId)
             .then(function(response) {
                 $scope.currentGame = response.data;
+                $rootScope.currentGame = $scope.currentGame;
                 if( $scope.currentGame.game_state == "in_progress")
                     $location.path("/games/" + gameId + "/currentRound");
             }, function() {
@@ -330,7 +331,7 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
     $scope.showBuildTeamsButton = function() {
         if ( ! $scope.currentGame )
                 return false;
-        return $scope.isAuthenticated() && $scope.currentGame.players_joined == 4 && $scope.currentGame.game_admin == $rootScope.currentUser.id;
+        return $scope.isAuthenticated() && $scope.currentGame.players_joined == $scope.currentGame.number_of_players && $scope.currentGame.game_admin == $rootScope.currentUser.id;
     };
 
     $scope.showBuildTeams = function() {
@@ -350,7 +351,14 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
                     });
                 }
             );
-    }
+    };
+
+    $scope.showTeamC = function() {
+        if( ! $rootScope.currentGame )
+            return false
+
+        return $rootScope.currentGame.number_of_players == 6;
+    };
 
     $scope.buildTeams = function() {
 
@@ -373,6 +381,13 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
                 "player2": $rootScope.userNameToId[$scope.player4]
             }
         };
+
+        if( $scope.currentGame.number_of_players == 6 ){
+            teams["teamC"] = {
+                "player1": $rootScope.userNameToId[$scope.player5],
+                "player2": $rootScope.userNameToId[$scope.player6]
+            }
+        }
 
         $http.post(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + '/teams', JSON.stringify(teams), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
            .success(function(response) {
@@ -488,7 +503,7 @@ myAppModule.controller('overviewController', function ($scope, $interval, $rootS
     });
 
     $scope.addGame = function() {
-	var game = {"name":$scope.game.name}
+	var game = {"name":$scope.game.name, "players": $scope.game.size}
 //        $http.post(CONFIG.API_ENDPOINT + '/games',JSON.stringify(event), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
         $http.post(CONFIG.API_ENDPOINT + '/games', JSON.stringify(game), {headers: {"X-CSRF-TOKEN": $cookies.get(COOKIE_KEYS.CSRF_TOKEN)}})
             .success(function(response) {

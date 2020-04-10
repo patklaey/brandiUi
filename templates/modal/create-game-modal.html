@@ -4,10 +4,27 @@
 
 <form name="gameForm" ng-submit="addGame()" novalidate>
     <div class="modal-body container col-md-12">
-        <div class="row">
+        <div ng-class="{ 'has-error': false }" >
             <div class="input-group form-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input id="username" type="text" autofocus class="form-control" name="username" placeholder="{{ 'username' | translate}}" ng-model="game.name" minlength="3" maxlength="15" required>
+                <input id="gamename" type="text" autofocus class="form-control" name="gamename" placeholder="Game Name" ng-model="game.name" minlength="3" maxlength="15" required>
+            </div>
+        </div>
+        <div ng-class="{ 'has-error': false }" >
+            <div class="input-group form-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-plus"></i></span>
+                <div class="col-md-2">
+                    <div class='input-group date form-group'>
+                        <label for="four">4</label>
+                        <input id="four" type="radio" ng-model="game.size" value="4">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class='input-group date form-group'>
+                        <label for="six">6</label>
+                        <input id="six" type="radio" ng-model="game.size" value="6">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

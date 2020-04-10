@@ -8,7 +8,7 @@
             <div ng-init="initGame()">
                 <div ng-show="showGameOverview()">
                     Waiting for other players to join<br/>
-                    Players joined so far: {{currentGame.players_joined}} (4 needed)<br/>
+                    Players joined so far: {{currentGame.players_joined}} ({{currentGame.number_of_players}} needed)<br/>
                     State: {{currentGame.game_state}} <br/>
                 </div>
                 <button type="button" class="btn btn-primary" ng-show="showBuildTeamsButton()" ng-cloak ng-click="showBuildTeams()">Build Teams</button>

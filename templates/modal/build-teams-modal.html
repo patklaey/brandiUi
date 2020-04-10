@@ -17,7 +17,7 @@
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <input id="player1" type="text" autofocus class="form-control" name="player1" placeholder="Team A Player 1" ng-model="player1" playername required>
                 </div>
-                <div class="help-block" ng-messages="buildTeamsForm.player1.$error" ng-if=" buildTeamsForm.player1.$touched">
+                <div class="help-block" ng-messages="buildTeamsForm.player1.$error" ng-if="buildTeamsForm.player1.$touched">
                     <p ng-message="required">Team A Player 1 is required</p>
                     <p ng-message="playername">Team A Player 1 is not among the available players</p>
                 </div>
@@ -27,7 +27,7 @@
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <input id="player2" type="text" autofocus class="form-control" name="player2" placeholder="Team A Player 2" ng-model="player2" playername required>
                 </div>
-                <div class="help-block" ng-messages="buildTeamsForm.player2.$error" ng-if=" buildTeamsForm.player2.$touched">
+                <div class="help-block" ng-messages="buildTeamsForm.player2.$error" ng-if="buildTeamsForm.player2.$touched">
                     <p ng-message="required">Team A Player 2 is required</p>
                     <p ng-message="playername">Team A Player 2 is not among the available players</p>
                 </div>
@@ -39,7 +39,7 @@
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <input id="player3" type="text" autofocus class="form-control" name="player3" placeholder="Team B Player 1" ng-model="player3" playername required>
                 </div>
-                <div class="help-block" ng-messages="buildTeamsForm.player3.$error" ng-if=" buildTeamsForm.player3.$touched">
+                <div class="help-block" ng-messages="buildTeamsForm.player3.$error" ng-if="buildTeamsForm.player3.$touched">
                     <p ng-message="required">Team B Player 1 is required</p>
                     <p ng-message="playername">Team B Player 1 is not among the available players</p>
                 </div>
@@ -49,9 +49,33 @@
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <input id="player4" type="text" autofocus class="form-control" name="player4" placeholder="Team B Player 2" ng-model="player4" playername required>
                 </div>
-                <div class="help-block" ng-messages="buildTeamsForm.player4.$error" ng-if=" buildTeamsForm.player4.$touched">
+                <div class="help-block" ng-messages="buildTeamsForm.player4.$error" ng-if="buildTeamsForm.player4.$touched">
                     <p ng-message="required">Team B Player 2 is required</p>
                     <p ng-message="playername">Team B Player 2 is not among the available players</p>
+                </div>
+            </div>
+            <div ng-show="showTeamC()">
+                <hr>
+                Team C
+                <div ng-class="{ 'has-error': buildTeamsForm.player5.$invalid && buildTeamsForm.player5.$touched}">
+                    <div class="input-group form-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="player5" type="text" autofocus class="form-control" name="player5" placeholder="Team C Player 1" ng-model="player5" playername required>
+                    </div>
+                    <div class="help-block" ng-messages="buildTeamsForm.player5.$error" ng-if="buildTeamsForm.player5.$touched">
+                        <p ng-message="required">Team C Player 1 is required</p>
+                        <p ng-message="playername">Team C Player 1 is not among the available players</p>
+                    </div>
+                </div>
+                <div ng-class="{ 'has-error': buildTeamsForm.player6.$invalid && buildTeamsForm.player6.$touched}">
+                    <div class="input-group form-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="player6" type="text" autofocus class="form-control" name="player6" placeholder="Team C Player 2" ng-model="player6" playername required>
+                    </div>
+                    <div class="help-block" ng-messages="buildTeamsForm.player6.$error" ng-if="buildTeamsForm.player6.$touched">
+                        <p ng-message="required">Team C Player 2 is required</p>
+                        <p ng-message="playername">Team C Player 2 is not among the available players</p>
+                    </div>
                 </div>
             </div>
             <hr>
