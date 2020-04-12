@@ -8,8 +8,13 @@
     <div ng-cloak ng-init="initRound()">
         <div ng-cloak ng-show="isRoundInProgress()">
             <div>
-                Game {{gameName}} playing {{userIdToUserName[teams.A.player1]}} and {{userIdToUserName[teams.A.player2]}} vs {{userIdToUserName[teams.B.player1]}} and {{userIdToUserName[teams.B.player2]}}<br/>
-                Player to play next: {{userIdToUserName[currentRound.player_to_play]}}
+                <p>Game {{game.game_name}} playing</p>
+                <ul>
+                    <li>{{userIdToUserName[teams.A.player1]}} and {{userIdToUserName[teams.A.player2]}}</li>
+                    <li>{{userIdToUserName[teams.B.player1]}} and {{userIdToUserName[teams.B.player2]}}</li>
+                    <li ng-show="showTeamC()">{{userIdToUserName[teams.C.player1]}} and {{userIdToUserName[teams.C.player2]}}</li>
+                </ul>
+                <p>Player to play next: {{userIdToUserName[currentRound.player_to_play]}}</p>
             </div>
             <h3>Table:</h3>
             <table ng-cloak border="1">

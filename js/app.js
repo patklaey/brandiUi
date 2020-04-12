@@ -119,6 +119,13 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
        $scope.loaded = true;
     });
 
+    $scope.showTeamC = function() {
+        if( ! $scope.game )
+            return false
+
+        return $scope.game.number_of_players == 6;
+    };
+
     $scope.isChangeCardTime = function() {
         if( ! $scope.currentRound )
             return false;
@@ -182,7 +189,7 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
         );
         $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId)
             .then(function(response) {
-                $scope.gameName = response.data.game_name;
+                $scope.game = response.data;
             }, function() {
                 $translate('cannotLoadEvents').then(function (text) {
                     $scope.showErrorToast(text);
