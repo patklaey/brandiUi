@@ -121,10 +121,47 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
 
     $scope.showTeamC = function() {
         if( ! $scope.game )
-            return false
+            return false;
 
         return $scope.game.number_of_players == 6;
     };
+
+    $scope.showFinishGameButton = function() {
+        if( ! $scope.game )
+            return false;
+
+        return $scope.game.game_admin == $cookies.getObject(COOKIE_KEYS.USERID);
+    };
+
+    $scope.showFinishGame = function() {
+        $rootScope.finishGameModal = $uibModal.open({
+            templateUrl: "./templates/modal/finish-game-modal.html",
+            controller: "roundController"
+        });
+    };
+
+    $scope.finishGame = function() {
+
+        $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + "/finish")
+            .then(function(response) {
+                $rootScope.finishGameModal.close("Finish Game Cancelled");
+                    $location.path("");
+            }, function() {
+                $translate('cannotLoadEvents').then(function (text) {
+                    $scope.showErrorToast(text);
+                });
+            }
+        );
+
+    };
+
+    $scope.cancelFinishGame = function() {
+        $rootScope.finishGameModal.close("Finish Game Cancelled");
+    };
+
+    $scope.isGameOver = function() {
+
+    }
 
     $scope.isChangeCardTime = function() {
         if( ! $scope.currentRound )
@@ -232,11 +269,16 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
         $http.get(CONFIG.API_ENDPOINT + '/games/' + $scope.gameId + "/currentRound")
             .then(function(response) {
                 $scope.currentRound = response.data;
-            }, function() {
-                $translate('cannotLoadEvents').then(function (text) {
-                    $scope.showErrorToast(text);
-                    $scope.stopPolling();
-                });
+            }, function(response) {
+                if( response.status == 303 ) {
+                    $scope.showInfoToast("Game Finished");
+                    $location.path("");
+                } else {
+                    $translate('cannotLoadEvents').then(function (text) {
+                        $scope.showErrorToast(text);
+                        $scope.stopPolling();
+                    });
+                }
             }
         );
     };
@@ -246,10 +288,11 @@ myAppModule.controller('roundController', function ($scope, $interval, $rootScop
             .then(function(response) {
                 $scope.currentSet = response.data;
             }, function() {
-                $translate('cannotLoadEvents').then(function (text) {
-                    $scope.showErrorToast(text);
-                    $scope.stopPolling();
-                });
+            // TODO: when game is done properly handle the case
+//                $translate('cannotLoadEvents').then(function (text) {
+//                    $scope.showErrorToast(text);
+//                    $scope.stopPolling();
+//                });
             }
         );
     };
