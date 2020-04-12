@@ -60,7 +60,7 @@
                 <div ng-class="{ 'has-error': buildTeamsForm.player5.$invalid && buildTeamsForm.player5.$touched}">
                     <div class="input-group form-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input id="player5" type="text" autofocus class="form-control" name="player5" placeholder="Team C Player 1" ng-model="player5" playername required>
+                        <input id="player5" type="text" autofocus class="form-control" name="player5" placeholder="Team C Player 1" ng-model="player5" playername ng-required="showTeamC()">
                     </div>
                     <div class="help-block" ng-messages="buildTeamsForm.player5.$error" ng-if="buildTeamsForm.player5.$touched">
                         <p ng-message="required">Team C Player 1 is required</p>
@@ -70,7 +70,7 @@
                 <div ng-class="{ 'has-error': buildTeamsForm.player6.$invalid && buildTeamsForm.player6.$touched}">
                     <div class="input-group form-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input id="player6" type="text" autofocus class="form-control" name="player6" placeholder="Team C Player 2" ng-model="player6" playername required>
+                        <input id="player6" type="text" autofocus class="form-control" name="player6" placeholder="Team C Player 2" ng-model="player6" playername ng-required="showTeamC()">
                     </div>
                     <div class="help-block" ng-messages="buildTeamsForm.player6.$error" ng-if="buildTeamsForm.player6.$touched">
                         <p ng-message="required">Team C Player 2 is required</p>

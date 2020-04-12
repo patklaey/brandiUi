@@ -366,6 +366,13 @@ myAppModule.controller('GameCtrl', function ($scope, $interval, $rootScope, $uib
             field.$setTouched();
         });
 
+        angular.forEach($scope.buildTeamsForm.$error.playername, function(field) {
+            if( ! $scope.showTeamC() ) {
+                $scope.buildTeamsForm.player5.$setValidity("playername", true);
+                $scope.buildTeamsForm.player6.$setValidity("playername", true);
+            }
+        });
+
         if ($scope.buildTeamsForm.$invalid){
             $rootScope.$broadcast("invalid-form-event");
             return;
